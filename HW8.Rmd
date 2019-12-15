@@ -1,0 +1,106 @@
+---
+title: "HW 8"
+author: "Kevin H. Bhimani"
+date: "April 24, 2018"
+output: html_document
+---
+Q. 2
+a)
+```{r}
+sample21 <- c(1,3,4,6)
+N <- 10^5
+my.boot <- numeric(N)
+for (i in 1:N)
+{
+x <- sample(sample21, 1, replace = TRUE) # draw resample
+my.boot[i] <- mean(x) # compute mean, store in my.boot
+}
+
+simList <- numeric(N)
+for(i in 1:N){
+ x <- my.boot[i]
+ simList[i] <- 0 
+ if (x==1){
+   simList[i] <- 1
+ }
+}
+mean(simList)
+```
+b)
+```{r}
+mean(my.boot < 6)
+```
+
+c)
+Total favorable combinations = 54
+Thus P = 54/256
+
+
+Q. 8 Consider a population that has a gamma distribution with parameters r = 5, ?? = 1/4.
+
+(a) Use simulation to generate an approximate sampling distribution of the
+mean; plot and describe the distribution.
+```{r}
+sample <- rgamma(10^4,5,1/4)
+mean(sample)
+var(sample)
+hist(sample)
+```
+The distribution looks skewed towards left.
+
+(b) Now, draw one random sample of size 200 from this population. Create a
+histogram of your sample and find the mean and standard deviation.
+```{r}
+sample2 <- rgamma(200,5,1/4)
+mean(sample2)
+sd(sample2)
+hist(sample2)
+```
+(c) Compute the bootstrap distribution of the mean for your sample, plot it, and note the bootstrap mean and standard error.
+
+```{r}
+N <- 10^5
+my.boot <- numeric(N)
+for (i in 1:N)
+{
+x <- sample(sample2, 200, replace = TRUE) # draw resample
+my.boot[i] <- mean(x) # compute mean, store in my.boot
+}
+mean(my.boot)
+sd(my.boot)
+hist(my.boot)
+```
+
+(d) Compare the bootstrap distribution to the approximate theoretical sampling
+distribution by creating a table like Table 5.2.
+
+
+
+
+(e) Repeat for sample sizes of n = 50 and n = 10. Describe carefully your
+observations about the effects of sample size on the bootstrap distribution.
+
+```{r}
+N <- 10^5
+my.boot <- numeric(N)
+for (i in 1:N)
+{
+x <- sample(sample2, 50, replace = TRUE) # draw resample
+my.boot[i] <- mean(x) # compute mean, store in my.boot
+}
+mean(my.boot)
+sd(my.boot)
+hist(my.boot)
+
+N <- 10^5
+my.boot <- numeric(N)
+for (i in 1:N)
+{
+x <- sample(sample2, 10, replace = TRUE) # draw resample
+my.boot[i] <- mean(x) # compute mean, store in my.boot
+}
+mean(my.boot)
+sd(my.boot)
+hist(my.boot)
+```
+I observe that the mean and standard deviation increase with decrease in sample size. I also see that the distribution is getting more skewed towards right.

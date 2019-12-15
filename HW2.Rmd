@@ -1,0 +1,92 @@
+---
+title: "HW 2"
+author: "Kevin H. Bhimani"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: html_document
+---
+
+
+Chapter 2:
+
+Q 4
+
+```{r}
+flightdelays<- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FlightDelays.csv",header = TRUE)
+
+table(flightdelays$DepartTime)
+barplot(table(flightdelays$DepartTime))
+table(flightdelays$Carrier,flightdelays$Delayed30)
+table(flightdelays$Day,flightdelays$Delayed30)
+
+```
+
+Protional of flights delayed:
+Mon:
+
+```{r}
+61/(569+61)
+
+```
+Tues:
+```{r}
+93/(535+93)
+```
+
+Wed:
+```{r}
+76/(488+76)
+
+```
+
+Thurs:
+```{r}
+132/(434+132)
+```
+
+Fri:
+```{r}
+144/(493+144)
+```
+
+sat:
+```{r}
+47/(406+47)
+```
+
+Sun:
+```{r}
+44/(507+44)
+```
+```{r}
+boxplot(FlightLength~Delayed30,data = flightdelays)
+
+```
+  
+No there is seem to be no correlation between length of the flight and the probability of it being delayed.
+
+Q. 6
+
+```{r}
+blaspru<- read.csv("http://people.kzoo.edu/enordmoe/math365/data/Spruce.csv",header = TRUE)
+mean(blaspru$Ht.change)
+median(blaspru$Ht.change)
+mean(blaspru$Ht.change,trim=.25)
+max(blaspru$Ht.change)
+min(blaspru$Ht.change)
+range(blaspru$Ht.change)
+var(blaspru$Ht.change)
+sd(blaspru$Ht.change)
+quantile(blaspru$Ht.change)
+fivenum(blaspru$Ht.change)
+IQR(blaspru$Ht.change)
+hist(blaspru$Ht.change)
+qqnorm(blaspru$Ht.change)
+boxplot(Di.change~Fertilizer,data = blaspru)
+
+NF <- subset(blaspru, select = Di.change,subset = Fertilizer == "NF",drop = T)
+Fer <- subset(blaspru, select = Di.change,subset = Fertilizer == "F",drop = T)
+
+tapply(blaspru$Di.change,blaspru$Fertilizer,summary)
+plot(blaspru$Ht.change,blaspru$Di.change)
+```
+

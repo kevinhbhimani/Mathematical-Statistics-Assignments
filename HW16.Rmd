@@ -1,0 +1,36 @@
+---
+title: "HW 16"
+author: "Kevin H. Bhimani"
+date: "May 19, 2018"
+output: html_document
+---
+Chapter 7:  32, 34
+
+7.32 Suppose X  N(0,$\sigma^2$). It is a fact that $\frac{X^2}{\sigma^2}$ has a chi-square distribution
+with 1 degree of freedom (see Theorem B.14). Use this fact to find a 95%
+confidence interval for $\sigma^2$. (In R, the command qchisq computes quantiles
+for the chi-square distribution.)
+Solution:
+We know that $\frac{(n-1)s^2}{\sigma^2}$ follows $\chi^2_{n-1}$. Then we get $P(\chi^2_{0.95/2,n-1})\leq\frac{(n-1)s^2}{\sigma^2}\leq\chi^2_{0.05/2,n-1}) = 0.95$ This gives us the confidence interval:
+$(\frac{(n-1)s^2}{\chi^2_{\alpha/2,n/2}},\frac{(n-1)s^2}{\chi^2_{1-\alpha/2,n/2}})$
+Here $\alpha = 0.05$
+So we get
+$(\frac{(n-1)s^2}{\chi^2_{0.025,n/2}},\frac{(n-1)s^2}{\chi^2_{0.975,n/2}})$
+
+7.34 Let X  Gamma(2, $\lambda$). It is a fact that $2\lambda X$ has a chi-square distribution with
+4 degrees of freedom (see Exercise 11). Use this fact to find a 95% confidence
+interval for $\lambda$. (In R, the command qchisq computes quantiles for the
+chi-square distribution.)
+Solution:
+Let X be a random variable with distribution gamma(2,$\lambda$). Then we know that $2\lambda X$ follows a chi squared distribution wiht 4 degrees of freedom. Then the confidence interval is
+$(\frac{q_1}{\sum_{i=1}^n X_i},\frac{q_2}{\sum_{i=1}^n X_i})$
+```{r}
+#Chi-squared density with d.f. d=4
+x=seq(from=0,to=20,length.out=1000)
+plot(x,dchisq(x,4),type='l',main='Chi-squared p.d.f with 4 d.f.')
+abline(h=0)
+grid()
+```
+
+
+

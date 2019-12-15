@@ -1,0 +1,37 @@
+---
+title: "HW#6"
+author: "Kevin H. Bhimani"
+date: "April 19, 2018"
+output: html_document
+---
+Q.12
+```{r}
+sample <- replicate(1000,mean(rexp(30,0.1)))
+mean(sample)
+
+for (i in 1:length(sample)){
+  simlist <- numeric(length(sample))
+  if(sample[i] > 12.000) simlist[i] <- 1 else 0
+}
+mean(simlist)
+
+```
+Q.16 
+a
+```{r}
+X <- runif(1000, 40, 60) # Draw 1000 values from Unif[40,60]
+Y <- runif(1000, 45, 80) # Draw 1000 values from Unif[45,80]
+total <- X + Y # Add them coordinate-wise
+hist(total) # Distribution of the sums
+mean(total)
+var(total)
+```
+b)
+```{r}
+X <- runif(1000, 40, 60) # Draw 1000 values from Unif[40,60]
+Y <- runif(1000, 45, 80) # Draw 1000 values from Unif[45,80]
+total <- X + Y # Add them coordinate-wise
+mean(total<90)
+```
+
+

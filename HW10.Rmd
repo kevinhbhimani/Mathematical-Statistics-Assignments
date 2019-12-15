@@ -1,0 +1,159 @@
+---
+title: "HW10"
+author: "Kevin H. Bhimani"
+date: "April 28, 2018"
+output: html_document
+---
+5. 14. Import the data from Girls2004 (see Section 1.2).
+
+(a) Perform some exploratory data analysis and obtain summary statistics on the weights of baby girls born in Wyoming and Alaska (do separate analyses for each state).
+```{r}
+BabyGirls <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/Girls2004.csv",header = TRUE)
+AKGirls <- subset(BabyGirls, select=Weight, State == "AK" , drop=T)
+WYGirls <- subset(BabyGirls, select=Weight, State == "WY" , drop=T)
+mean(AKGirls)
+mean(WYGirls)
+var(AKGirls)
+var(WYGirls)
+hist(AKGirls)
+hist(WYGirls)
+summary(AKGirls)
+summary(WYGirls)
+```
+
+
+(b) Bootstrap the difference in means, plot the distribution, and give the summary statistics. Obtain a 95% bootstrap percentile confidence interval and interpret this interval.
+
+```{r}
+B <- 10^4
+weight.diff.mean <- numeric(B)
+n<-length(AKGirls)
+m<-length(WYGirls)
+
+# Sample separately from each group, then calculate diff in means
+for (i in 1:B)
+{
+  WY.boot <- sample(WYGirls, m, replace=TRUE)
+  AK.boot <- sample(AKGirls, n, replace=TRUE)
+  weight.diff.mean[i] <- mean(WY.boot)-mean(AK.boot)
+}
+mean(weight.diff.mean)
+hist(weight.diff.mean)
+abline(v=mean(WYGirls)-mean(AKGirls),col="red")
+quantile(weight.diff.mean,c(0.025,0.975))
+```
+The histrograph shows that the difference is normally distributed around the mean of 308. The confidence interval suggests that we are 95% sure that the mean of difference lies between 530 and 88.
+
+(c) What is the bootstrap estimate of the bias? What fraction of the bootstrap standard error does it represent?
+```{r}
+bias <- mean(weight.diff.mean) - (mean(WYGirls)-mean(AKGirls))  #bias
+bias/(sd(WYGirls) + sd(AKGirls))
+```
+
+(d) Conduct a permutation test to see if the difference in mean weights is statistically significant.
+
+```{r}
+PermTest <- BabyGirls$Weight
+observed = mean(WYGirls) - mean(AKGirls)
+t <- length(PermTest)
+N <- 10^4-1
+result <- numeric(N)
+for (i in 1:N)
+{
+index <- sample(t, size = t/2, replace = FALSE)
+result[i] <- mean(PermTest[index]) - mean(PermTest[-index])
+}
+hist(result)
+
+(sum(result <= observed) + 1)/(N + 1) # P-value
+```
+So the permutation test stuggest that this test is highly acurate and thus there is indeed a diffference in weight of girls in Alaska an Wyoming.
+
+(e) For what population(s), if any, does this conclusion hold? Explain.
+
+This conclusion hold for populations that have different mean weights.
+
+5.16 
+
+Import the data from Flight Delays Case Study in Section 1.1 data into R. Although the data are on all UA and AA flights flown in May and June of 2009, we will assume these represent a sample from a larger population of UA and AA flights flown under similar circumstances. We will consider the ratio of means of the flight delay lengths, ??UA/??AA.
+
+(a) Perform some exploratory data analysis on flight delay lengths for each of UA and AA flights.
+
+```{r}
+Flights <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FlightDelays.csv",header = TRUE)
+UAFlights <- subset(Flights, select=Delay, Carrier == "UA" , drop=T)
+AAFlights <- subset(Flights, select=Delay, Carrier == "AA" , drop=T)
+mean(UAFlights)
+mean(AAFlights)
+var(UAFlights)
+var(AAFlights)
+hist(UAFlights)
+hist(AAFlights)
+summary(UAFlights)
+summary(AAFlights)
+```
+
+
+(b) Bootstrap the mean of flight delay lengths for each airline separately and describe the distribution.
+
+```{r}
+B <- 10^4
+length.diff.mean <- numeric(B)
+n<-length(UAFlights)
+m<-length(AAFlights)
+
+# Sample separately from each group, then calculate diff in means
+for (i in 1:B)
+{
+  AA.boot <- sample(AAFlights, m, replace=TRUE)
+  UA.boot <- sample(UAFlights, n, replace=TRUE)
+  length.diff.mean[i] <- mean(AA.boot)-mean(UA.boot)
+}
+mean(length.diff.mean)
+hist(length.diff.mean)
+abline(v= mean(AA.boot)-mean(UA.boot),col="red")
+quantile(length.diff.mean,c(0.025,0.975))
+```
+The distribution appears to be normal. It is clear that AA flights are delayed more than UA flights in general.
+
+(c) Bootstrap the ratio of means. Provide plots of the bootstrap distribution and describe the distribution.
+
+```{r}
+B <- 10^4
+length.rat.mean <- numeric(B)
+n<-length(UAFlights)
+m<-length(AAFlights)
+
+# Sample separately from each group, then calculate diff in means
+for (i in 1:B)
+{
+  AA.boot <- sample(AAFlights, m, replace=TRUE)
+  UA.boot <- sample(UAFlights, n, replace=TRUE)
+  length.rat.mean[i] <- mean(AA.boot)/mean(UA.boot)
+}
+mean(length.rat.mean)
+hist(length.rat.mean)
+abline(v= mean(AA.boot)/mean(UA.boot),col="red")
+```
+The ratio appears to be normally distributed with mean 0.64. So AA flights are delayed more than UA flights 64% percent of the time.
+
+(d) Find the 95% bootstrap percentile interval for the ratio of means. Interpret this interval.
+
+```{r}
+quantile(length.rat.mean,c(0.025,0.975))
+
+```
+So this means that we are 95% sure that the ratio of means is between 0.51 and 0.79.
+
+(e) What is the bootstrap estimate of the bias? What fraction of the bootstrap standard error does it represent?
+
+```{r}
+bias <- mean(length.rat.mean) - (mean(AAFlights)/mean(UAFlights))  #bias
+bias
+bias/(sd(AAFlights) + sd(UAFlights))
+```
+
+
+(f) For inference in this text, we assume that the observations are independent. Is that condition met here? Explain.
+
+I think that the condition is meet since we are sampling with replacement. So all observations are independent of each other.

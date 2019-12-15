@@ -1,0 +1,141 @@
+---
+title: "Math Stats HW #4"
+subtitle: "Handin Problems:  3.4 (4 points), 3.6 (4 points), 3.8 (2 points)"
+author: "Kevin H. Bhimani"
+date: "April 16, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# This chunk sets a couple options to keep messages and warnings
+# from appearing in the final write-up.
+# It also sets default rounding to 3 decimal places.
+knitr::opts_chunk$set(echo = TRUE,message=FALSE,warning=FALSE)
+options(digits = 4,width=100,fig.width=8) 
+```
+
+
+```{r, include=FALSE}
+# These commands silently read in the datsets without producing 
+# output
+FlightDelays<- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FlightDelays.csv")
+Spruce<-read.csv("http://people.kzoo.edu/enordmoe/math365/data/Spruce.csv")
+```
+
+
+#### Problem 3.4  
+
+In the **FlightDelays** Case Study in Section 1.1, the data contain flight delays for two airlines, American Airlines and United Airlines.
+
+(a) Compute the proportion of times that each carrier's flights was delayed more than 20 min. Conduct a two-sided test to see if the difference in these proportions is statistically significant.   
+
+**Answer:**  
+
+```{r}
+Del<-FlightDelays$Delay
+Del.UA<-subset(FlightDelays, select=Delay, subset=Carrier=="UA", drop=T)
+Del.AA<-subset(FlightDelays, select=Delay, subset=Carrier=="AA", drop=T)
+u <- mean(Del.UA>20)
+v <- mean(Del.AA>20)
+z <- u - v
+z
+```
+```{r}
+N<-10^4-1
+reslt<-numeric(N)
+for(i in 1:N)
+{
+index<-sample(4029, size=1123, replace=FALSE)
+reslt[i]<-mean(Del[index]>20)-mean(Del[-index]>20)
+}
+pValue<-(sum(reslt>=z)+1)/(N+1)
+pValue*2
+```
+
+
+(b) Compute the variance in the flight delay lengths for each carrier. Conduct a test to see if the variance for United Airlines is greater than that of American Airlines.     
+
+**Answer:**  
+
+```{r}
+var(Del.UA)
+var(Del.AA)
+a <- var(Del.UA)/var(Del.AA)
+a
+
+N<-10^4-1
+reslt<-numeric(N)
+for(i in 1:N)
+{
+index<-sample(4029, size=1123, replace=FALSE)
+reslt[i]<-mean(Del[index]>20)-mean(Del[-index]>20)
+}
+pValue<-(sum(reslt>=a)+1)/(N+1)
+pValue*2
+```
+
+```
+
+
+
+
+#### Problem 3.6  
+
+In the Flight Delays Case Study in Section 1.1,   
+
+(a) Find the trimmed mean of the delay times for United Airlines and American Airlines.  
+
+**Answer:**  
+
+
+```{r}
+mean(Del.UA, trim = .25)
+mean(Del.AA, trim = .25)
+
+```
+
+
+(b) Conduct a two-sided test to see if the difference in trimmed means is statistically significant.  
+
+**Answer:**  
+
+
+```{r}
+t <- mean(Del.UA, trim = .25)-mean(Del.AA, trim = .25)
+t
+
+N<-10^4-1
+reslt<-numeric(N)
+for(i in 1:N)
+{
+index<-sample(4029, size=1123, replace=FALSE)
+reslt[i]<-mean(Del[index], trim = .25)-mean(Del[-index], trim = .25)
+}
+pValue<-(sum(reslt>=t+1))/(N+1)
+2*pValue
+```
+
+
+#### Problem 3.8  
+
+In the Black Spruce Case Study in Section 1.9, seedlings were planted in plots that were either subject to competition (from other plants) or not. Use the data set **Spruce** to conduct a test to see if the mean difference in how much the seedlings grew over the course of the study under these two treatments is statistically significant. 
+
+
+```{r}
+Htchange<-subset(Spruce, select = Ht.change, drop = TRUE)
+Htchange.C<-subset(Spruce, select = Ht.change, subset = (Competition == "C"), drop = TRUE)
+Htchange.NC<-subset(Spruce, select = Ht.change, subset = (Competition == "NC"), drop = TRUE)
+observed<-mean(Htchange.NC)-mean(Htchange.C)
+observed
+
+N<-10^4-1
+result<-numeric(N)
+for(i in 1:N)
+{
+index<-sample(72, size=36, replace=FALSE)
+result[i]<-mean(Htchange[index])-mean(Htchange[-index])
+}
+pValue<-(sum(result>=observed+1))/(N+1)
+2*pValue
+```
+

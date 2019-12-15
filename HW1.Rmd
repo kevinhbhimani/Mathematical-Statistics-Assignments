@@ -1,0 +1,67 @@
+---
+title: 'Math 365 Hand-in Problems Set #1: 1.2, 1.4, 1.6'
+author: "Kevin H. Bhimani"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+#
+# Don't change this chunk 
+#
+# Use the following commands to set any document-wide R chunk options
+knitr::opts_chunk$set(echo = TRUE)
+# The following command illustrates how you would read in a dataset
+# as part of a homework write-up; it's not needed here.
+# The header=TRUE option means 
+flightdelays<- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FlightDelays.csv",header = TRUE)
+```
+
+
+
+#### Problem 1.2
+
+Researchers reported that moderate drinking of alcohol was associated with a lower risk of dementia (Mukamal et al. (2003)). Their sample consisted of 373 people with dementia and 373 people without dementia. Participants were asked how much beer, wine, or shot of liquor they consumed. Thus, participants who consumed 1–6 drinks a week had a lower risk of dementia than those who abstained from alcohol.
+
+
+(a)  Was this study an observational study or an experiment?  
+
+**Answer**: This was na observational study since the researchers did not alter any environment.
+
+(b) Can the researchers conclude that drinking alcohol causes a lower risk of dementia?  
+
+**Answer**: Since this is an observational study, no cause and effect conclusions can be drawn.
+
+#### Problem 1.4  
+
+Duke University researchers found that diets low in carbohydrates are effective in controlling blood sugar levels (Westman et al. (2008)). Eighty-four volunteers with obesity and type 2 diabetes were randomly assigned to either a diet of less than 20 g of carbohydrates/day or a low-glycemic, reduced calorie diet (500 calories/day). Ninety-five percent of those on the low-carbohydrate diet were able to reduce or eliminate their diabetes medications compared to 62% on the low-glycemic diet.
+
+(a)  Was this study an observational study or an experiment?   
+
+**Answer**: This is an experimental study since the environment was changed to simulate an experiment.
+
+(b) Can researchers conclude that a low-carbohydrate diet causes an improvement in type 2 diabetes? 
+
+**Answer**: Yes the researchers can attest to that.
+
+(c) Can researchers extend their results to a more general population? Explain.  
+
+**Answer**: No becuase since the participants were volunteers.
+
+#### Problem 1.6  
+
+A typical Gallup poll surveys about n = 1000 adults. Suppose the sampling frame contains 100 million adults (including you). Now, select a random sample of 1000 adults.   
+
+(a) What is the probability that you will be in this sample?  
+
+**Answer**: 0.00001
+
+(b) Now suppose that 2000 such samples are selected, each independent of the others. What is the probability that you will not be in any of the samples? 
+
+**Answer**: 0.9802
+
+(c) How many samples must be selected for you to have a 0.5 probability of being in at least one sample?  
+
+**Answer**: 69314
+

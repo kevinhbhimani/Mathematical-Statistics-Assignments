@@ -1,0 +1,131 @@
+---
+title: 'Math Stats HW #5'
+author: "Kevin H. Bhimani"
+date: "April 17, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+# This chunk sets a couple options to keep messages and warnings
+# from appearing in the final write-up.
+# It also sets default rounding to 3 decimal places.
+knitr::opts_chunk$set(echo = TRUE,message=FALSE,warning=FALSE)
+options(digits = 4,width=100,fig.width=8) 
+```
+
+
+```{r, include=FALSE}
+# These commands silently read in the datsets without producing 
+# output
+FlightDelays<- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FlightDelays.csv")
+Spruce<-read.csv("http://people.kzoo.edu/enordmoe/math365/data/Spruce.csv")
+```
+
+
+#### Problem 1  
+
+Repeat 3.7 using the FlightDelays data but instead of comparing May and June, compare flights destined for O'Hare Airport vs all other flights.
+
+**Answer:**  
+Part a
+```{r}
+Ddest <- subset(FlightDelays, select=Delay, Destination =="ORD", drop=T)
+Ddest2 <- subset(FlightDelays, select=Delay, Destination !="ORD", drop=T)
+
+mean(Ddest>20)
+#length(which(Ddest>20))/length(Ddest)
+Observed <- mean(Ddest>20) - mean(Ddest2>20)
+
+N <- 10^4 - 1
+result <- numeric(N)
+for (i in 1:N) {
+    # sample of size 1785 # of flights to O'Hare
+    index <- sample(4029, size = 1785, replace = FALSE)
+    result[i] <- mean(FlightDelays$Delay[index]>20)-mean(FlightDelays$Delay[-index]>20)
+}
+pvalue <- ((min(sum(result <= Observed), sum(result >= Observed))+1)/(N + 1))
+2*pvalue
+ 
+
+```
+Since the  pvalue is so high, we conclude that the null hypothesis is true. That is there is no correlation between flights delayed at ORD and flights delayed at other airports.
+
+Part b
+
+```{r}
+
+var.ORD <- var(Ddest)
+var.ORD
+
+var.other <- var(Ddest2)
+var.other
+
+obs<- var.ORD/var.other
+obs
+
+N <- 10^4 - 1
+results <- numeric(N)
+for (i in 1:N) {
+   
+    index <- sample(4029, size = 1785, replace = FALSE)
+    results[i] <- var(FlightDelays$Delay[index])/var(FlightDelays$Delay[-index])
+}
+pvalue <- ((min(sum(results >= obs), sum(results <= obs)) + 1)/(N + 1)) * 2
+pvalue
+
+```
+So the result is still not statistically significant.
+
+#### Problem 2
+
+Again use the FllightDelays data set but now compare delays on weekends ("Sat" or "Sun) with weekdays. Carry out the following comparisons using 2-sided P-values. Be sure to write a one or two sentence conclusions for each comparison.
+
+a) Mean flight delay. Test whether the mean flight delays differ for weekdays versus weekends.
+
+```{r}
+Dwknd <- subset(FlightDelays, select=Delay, subset = (Day =="Sat"|Day =="Sun"), drop=T)
+Dwkday <- subset(FlightDelays, select=Delay, subset = (Day !="Sat"&Day !="Sun"), drop=T)
+
+mean(Dwknd)
+mean(Dwkday)
+
+Observed <- mean(Dwkday) - mean(Dwknd)
+
+N <- 10^4 - 1
+result <- numeric(N)
+for (i in 1:N) {
+    # sample of size 1785 # of flights to O'Hare
+    index <- sample(4029, size = 1004, replace = FALSE)
+    result[i] <- mean(FlightDelays$Delay[index]>20)-mean(FlightDelays$Delay[-index]>20)
+}
+pvalue <- ((min(sum(result <= Observed), sum(result >= Observed))+1)/(N + 1))
+2*pvalue
+```
+
+So the flights are more delayed over weed days than weekends.
+
+b) Ratio of Interquartile ranges. Test whether the ratio of IQRs is statistically significantly different from 1.
+
+```{r}
+
+week <- FlightDelays$Delay
+Observed = IQR(Dwknd)/IQR(Dwkday)
+
+N <- 10^4 - 1
+result <- numeric(N)
+for (i in 1:N) {
+    # sample of size 1785 # of flights to O'Hare
+    index <- sample(4029, size = 1004, replace = FALSE)
+    result[i] <- IQR(week[index])/IQR(week[-index])
+}
+pvalue <- ((min(sum(result <= Observed), sum(result >= Observed))+1)/(N + 1))
+2*pvalue
+
+```
+
+So the ratio is not statistically significantly different from 1.
+
+
+

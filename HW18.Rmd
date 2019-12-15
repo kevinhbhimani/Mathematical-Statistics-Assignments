@@ -1,0 +1,138 @@
+---
+title: "HW 18"
+author: "Kevin H. Bhimani"
+date: "May 27, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+Chapter 7: 26(4 points), 36 (4 points), 38
+
+26. The data set MnGroundwater has measurements on water quality of 895 randomly selected wells in Minnesota.
+(a) Create a histogram or normal quantile plot of the alkalinity and comment on the distribution.
+```{r}
+Minnesota <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/MnGroundwater.csv")
+alkalinity <- Minnesota$Alkalinity
+hist(alkalinity)
+qqnorm(alkalinity)
+qqline(alkalinity)
+```
+The distriubiton looks even distributed. The normal qq plot confirms that since we have almost a straight line.
+
+(b) Find a 95% t confidence interval for the mean $\mu$ of alkalinity levels in Minnesota wells.
+we set $\alpha = 0.05$. Then confidence interval is = $(\bar{X}-q  \frac{S}{\sqrt{n}},\bar{X}+q \frac{\sigma}{\sqrt{n}})$
+
+$q=qnorm(1-0.05/2) = 1.959964$
+```{r}
+t.test(alkalinity,conf.level=0.95)$conf
+```
+So the confidence interval is (283575.6,297789.8)
+
+(c) Find the 95% bootstrap percentile and bootstrap t confidence intervals for the mean alkalinity level and compare results. Which confidence interval will you report?
+```{r}
+Minnesota <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/MnGroundwater.csv")
+alkalinity <- Minnesota$Alkalinity
+xbar <- mean(alkalinity)
+N <- 10^4
+n <- length(alkalinity)
+mean.bootstrap <- numeric(N)
+Tstar <- numeric(N)
+set.seed(365)
+for (i in 1:N)
+{
+x <- sample(alkalinity, size = n, replace = T)
+mean.bootstrap[i] <- mean(x)
+Tstar[i] <- (mean(x)-xbar) / (sd(x)/sqrt(n))
+}
+quantile(mean.bootstrap,c(.025, .975))
+quantile(Tstar, c(.975,.025))
+ q1 <- -1.945211
+ q2 <- 1.928312 
+ xbar - q2*(sd(alkalinity)/sqrt(length(alkalinity)))
+ xbar - q1*(sd(alkalinity)/sqrt(length(alkalinity)))
+
+```
+95% bootstrap percentile: (283648.0,297592.3 )
+95% bootstrap t confidence interval:(283513.8,297891.4)
+
+Because of large sample size, I would report 95% bootstrap t confidence interval
+```{r}
+xbar <- mean(alkalinity)
+xbar
+xbar - 1.96*(sd(alkalinity)/sqrt(895))
+xbar + 1.96*(sd(alkalinity)/sqrt(895))
+```
+
+95% bootstrap t confidence interval: (283585.1,297780.3)
+
+Because of the large sample size, I would report the
+
+36. In this exercise, you will derive and use a "bootstrap Z" interval.
+(a) Following the steps in the derivation of the bootstrap t interval in Section 7.5,
+derive a bootstrap Z interval for $\mu$, for cases when $\sigma$ is known.
+
+We can replace S with $\sigma$ for formula in Pg. 197
+$(\bar{x}-Q_2^*\frac{\sigma}{\sqrt{n}},\bar{x}-Q_1^*\frac{\sigma}{\sqrt{n})})$
+
+(b) Calculate this interval for the Verizon CLEC data; for $\sigma$, use the sample
+variance of the Verizon ILEC data. (In practice, we may use methods for known $\sigma$ when we can estimate ?? from a large related data set.)
+
+```{r}
+Verizon <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/Verizon.csv")
+ILEC <- subset(Verizon, select="Time", Group =="ILEC", drop=T)
+CLEC <- subset(Verizon, select="Time", Group =="CLEC", drop=T)
+
+xbar <- mean(CLEC)
+sd <- sd(ILEC)
+t.test(ILEC, conf.level = .95)$conf
+N <- 10^4
+n <- length(CLEC)
+Zstar <- numeric(N)
+set.seed(365)
+for (i in 1:N)
+{
+x <- sample(CLEC, size = n, replace = T)
+Zstar[i] <- (mean(x)-xbar)/(sd/sqrt(n))
+}
+ quantile(Zstar, c(0.025, 0.975))
+```
+
+```{r}
+ q1 <- -2.064709
+ q2 <- 2.875568 
+ xbar - q2*(sd/sqrt(length(CLEC)))
+ xbar - q1*(sd/sqrt(length(CLEC)))
+```
+So the confidence interval is (7.701021,22.83351)
+
+(c) Compare that interval with a formula z interval. How does the bootstrap Z interval adjust for skewness?
+```{r}
+ xbar - 1.96*(sd/sqrt(length(CLEC)))
+ xbar + 1.96*(sd/sqrt(length(CLEC)))
+```
+
+The Z confidence interval is (10.50548,22.51278)
+
+The bootstrap Z interval does not assume normal distribution and thus adjust for skewness.
+
+38. Robin wonders how much variation there is in a box of his favorite cereal. He buys eight boxes from eight different stores and finds the weights of the contents
+to be (in grams)
+560 568 580 550 581 581 562 550
+Assuming the data are from a normal distribution, find a 90%confidence interval for the variance $\sigma^2$. (In R, the command qchisq computes quantiles for the
+chi-square distribution.)
+theorem b16
+
+```{r}
+v <- c(560, 568, 580, 550, 581, 581, 562, 550)
+xbar <- mean(v)
+xvar <- var(v)
+n <-8
+a <- qchisq(0.05,7)
+b <- qchisq(0.95,7)
+((n-1)*xvar)/b
+((n-1)*xvar)/a
+
+
+```
+So the interval is (86.15824,559.2083)

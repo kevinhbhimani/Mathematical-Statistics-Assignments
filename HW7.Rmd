@@ -1,0 +1,85 @@
+---
+title: "HW7"
+author: "Kevin H. Bhimani"
+date: "April 21, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+Q. 18
+a
+```{r}
+my.means <- numeric(1000)
+for (i in 1:1000)
+{
+x <- rexp(30, rate = 1/3)
+my.means[i] <- mean(x)
+}
+hist(my.means)
+qqnorm(my.means)
+qqline(my.means)
+
+
+
+```
+b
+```{r}
+ mean(my.means)
+
+ sqrt(var(my.means))
+```
+c
+```{r}
+mean(my.means<=3.5)
+```
+d
+for exponetial distribution, expected value is $1/\lambda = 3$ and variance is $1/\lambda ^2 = 9$
+```{r}
+
+pnorm(3.5,3,3)
+```
+
+Q.28
+```{r}
+my.vars <- numeric(1000)
+for (i in 1:1000)
+{
+x <- rnorm(20, 25, 7)
+my.vars[i] <- var(x)
+}
+mean(my.vars)
+var(my.vars)
+hist(my.vars)
+qqnorm(my.vars)
+qqline(my.vars)
+```
+Yes this appears to resemble normal distribution.
+For n=50
+```{r}
+my.vars <- numeric(1000)
+for (i in 1:1000)
+{
+x <- rnorm(50, 25, 7)
+my.vars[i] <- var(x)
+}
+mean(my.vars)
+var(my.vars)
+hist(my.vars)
+qqnorm(my.vars)
+qqline(my.vars)
+```
+For n=200
+```{r}
+my.vars <- numeric(1000)
+for (i in 1:1000)
+{
+x <- rnorm(200, 25, 7)
+my.vars[i] <- var(x)
+}
+mean(my.vars)
+var(my.vars)
+hist(my.vars)
+qqnorm(my.vars)
+qqline(my.vars)
+```
+We see that it resembles normal distribution better for higher number of n. This makes sense since the CLT approximation gets better with higher n.

@@ -1,0 +1,98 @@
+---
+title: "Math Stats HW #3"
+subtitle: "Handin Problems:  2.12, 2.14, 2.16"
+author: "Kevin Bhimani"
+date: "April 11, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# This chunk sets a couple options to keep messages and warnings
+# from appearing in the final write-up.
+# It also sets default rounding to 3 decimal places.
+knitr::opts_chunk$set(echo = TRUE,message=FALSE,warning=FALSE)
+options(digits = 4,width=100,fig.width=8) 
+```
+
+
+
+#### Problem 2.12
+
+Let $X$ be a random variable with cdf $F(x) = 1-9/x^2$ for $x\ge 3$. Find an expression for the $p$th quantile of $X$.
+
+**Answer:**
+ We know $F(x)= 1-9/x^2$. Then for $p$th quantile,
+ $1-9/x^2 = p$
+ or $1+p = 9/x^2$
+ or $x = \pm \frac{3}{\sqrt(1+p)}$
+ 
+
+
+#### Problem 2.14
+
+In this exercise, we investigate normal quantile plots using R.  
+
+(a) Draw a random sample of size $n = 15$ from $N(0,1)$ and plot both the normal quantile plot and the histogram. Do the points on the quantile plot appear to fall on a straight line? Is the histogram symmetric, unimodal, and mound shaped? Do this several times.  
+
+**Answer:**
+
+```{r}
+x <- rnorm(15) # draw random sample of size 15 from N(0,1)
+#par(mfrow=c(2,1)) # set up plot area to place 2 graphs on one sheet
+qqnorm(x)
+qqline(x)
+hist(x)
+
+```
+
+(b) Repeat part (a) for samples of size $n = 30$, $n = 60$, and $n = 100$.   
+
+**Answer:**
+
+```{r}
+x <- rnorm(30) # draw random sample of size 15 from N(0,1)
+#par(mfrow=c(2,1)) # set up plot area to place 2 graphs on one sheet
+qqnorm(x)
+qqline(x)
+hist(x)
+
+x <- rnorm(60) # draw random sample of size 15 from N(0,1)
+#par(mfrow=c(2,1)) # set up plot area to place 2 graphs on one sheet
+qqnorm(x)
+qqline(x)
+hist(x)
+
+x <- rnorm(100) # draw random sample of size 15 from N(0,1)
+#par(mfrow=c(2,1)) # set up plot area to place 2 graphs on one sheet
+qqnorm(x)
+qqline(x)
+hist(x)
+
+```
+
+
+(c) What lesson do you draw about using graphs to assess whether or not a data set follows lesson a normal distribution?  
+
+We see that the data does follow a normal distribution since we are getting a straight line. It is evident that the normal behavior increases once the sample size is increased.
+
+**Answer:**
+
+
+#### Problem 2.16
+
+The ecdf for a data set with $n=20$ values is given in Figure 2.16.  
+
+(a) How many values are less than or equal to 7?   
+
+**Answer:**  
+3
+
+(b) How many times does the value 8 occur?   
+
+**Answer:**  
+4
+
+(c) In a histogram of these values, how many values fall in the bin (20,25]?  
+
+**Answer:**  
+6

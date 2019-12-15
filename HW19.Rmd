@@ -1,0 +1,27 @@
+---
+title: "HW19"
+author: "Kevin H. Bhimani"
+date: "May 31, 2018"
+output: html_document
+---
+Q 6
+```{r}
+data1 <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/Spruce.csv")
+comp <- subset(data1, select="Di.change", Competition =="C", drop=T)
+nocomp <- subset(data1, select="Di.change", Competition =="NC", drop=T)
+mean(comp)
+mean(nocomp)
+sd(comp)
+sd(nocomp)
+length(comp)
+length(nocomp)
+
+t.test(nocomp,comp,alt="greater")
+```
+
+Q 12
+
+```{r}
+prop.test(c(28,13),c(250,250))
+```
+

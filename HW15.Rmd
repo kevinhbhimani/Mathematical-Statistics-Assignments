@@ -1,0 +1,262 @@
+---
+title: "HW15"
+author: "Kevin H. Bhimani"
+date: "May 16, 2018"
+output: html_document
+---
+Chapter 7:  2, 6, 8, 14, 18 
+
+7.2 For high school seniors in 2009 who took the SAT exam, the mean math SAT score was ?? = 515 with a standard deviation of ?? = 116. From a random sample of 34 students at your university, you find the average SAT score to be 538. You forgot to compute the standard deviation, so you decide to assume that the standard deviation of scores at your university is the same as the national standard deviation of 116. Compute a 95% confidence interval for the mean SAT score at your university. (Assume that the university is large enough that we can ignore the fact that the mean of the 34 students is known.)
+
+we set $\alpha = 0.05$. Then confidence interval is = $(\bar(X)-q  \frac{S}{\sqrt{n}},\bar(X)+q \frac{\sigma}{sqrt{n}})$
+
+$q=qnorm(1-0.05/2) = 1.959964$
+$=(538 - 1.96 * \frac{116}{\sqrt{34}},538 + 1.96 * \frac{116}{\sqrt{34}})$
+$=(499.008,576.99)$
+
+7.6 Julie is interested in the sugar content of vanilla ice cream. She obtains a random
+sample of n = 20 brands and finds an average of 18.05 g with standard
+deviation 5 g (per half cup serving). Assuming that the data come from a normal
+distribution, find a 90% confidence interval for the mean amount of sugar in a
+half cup serving of vanilla ice cream.
+
+we set $\alpha = 0.1$. Then confidence interval is = $(\bar(X)-q  \frac{S}{\sqrt{n}},\bar(X)+q \frac{\sigma}{sqrt{n}})$
+$q=qnorm(1-0.1/2) = 1.644854$
+Then confidence interval = $(180.5 - 1.65 * \frac{5}{\sqrt{20}},538 + 1.96 * \frac{5}{\sqrt{20}})$
+=(16.21,19.89)
+
+
+7. 8. In the simulation on page 176, we drew random samples of size 20 from Gamma(5, 2) to see how often the confidence interval for the mean missed the true mean. Repeat this simulation by changing the sample size, say n = 30, n = 60, n = 100, and n = 250. How does the sample size affect the frequency of missing the ???
+
+```{r}
+tooLow <- 0 # set counter to 0
+tooHigh <- 0 # set counter to 0
+n <- 30 # sample size
+q <- qt(0.975, n-1) # quantile
+N <- 10^5
+for (i in 1:N)
+{
+x <- rgamma(n, shape = 5, rate = 2)
+xbar <- mean(x)
+s <- sd(x)
+L <- xbar - q*s/sqrt(n)
+U <- xbar + q*s/sqrt(n)
+if (U < 5/2) # Does right endpt miss 5/2?
+tooLow <- tooLow + 1 # If yes, increases counter
+if (5/2 < L) # Does left endpt miss 5/2?
+tooHigh <- tooHigh + 1 # If yes, increase counter
+}
+tooLow/N
+tooHigh/N
+
+tooLow <- 0 # set counter to 0
+tooHigh <- 0 # set counter to 0
+n <- 60 # sample size
+q <- qt(0.975, n-1) # quantile
+N <- 10^5
+for (i in 1:N)
+{
+x <- rgamma(n, shape = 5, rate = 2)
+xbar <- mean(x)
+s <- sd(x)
+L <- xbar - q*s/sqrt(n)
+U <- xbar + q*s/sqrt(n)
+if (U < 5/2) # Does right endpt miss 5/2?
+tooLow <- tooLow + 1 # If yes, increases counter
+if (5/2 < L) # Does left endpt miss 5/2?
+tooHigh <- tooHigh + 1 # If yes, increase counter
+}
+tooLow/N
+tooHigh/N
+
+tooLow <- 0 # set counter to 0
+tooHigh <- 0 # set counter to 0
+n <- 100 # sample size
+q <- qt(0.975, n-1) # quantile
+N <- 10^5
+for (i in 1:N)
+{
+x <- rgamma(n, shape = 5, rate = 2)
+xbar <- mean(x)
+s <- sd(x)
+L <- xbar - q*s/sqrt(n)
+U <- xbar + q*s/sqrt(n)
+if (U < 5/2) # Does right endpt miss 5/2?
+tooLow <- tooLow + 1 # If yes, increases counter
+if (5/2 < L) # Does left endpt miss 5/2?
+tooHigh <- tooHigh + 1 # If yes, increase counter
+}
+tooLow/N
+tooHigh/N
+
+
+tooLow <- 0 # set counter to 0
+tooHigh <- 0 # set counter to 0
+n <- 250 # sample size
+q <- qt(0.975, n-1) # quantile
+N <- 10^5
+for (i in 1:N)
+{
+x <- rgamma(n, shape = 5, rate = 2)
+xbar <- mean(x)
+s <- sd(x)
+L <- xbar - q*s/sqrt(n)
+U <- xbar + q*s/sqrt(n)
+if (U < 5/2) # Does right endpt miss 5/2?
+tooLow <- tooLow + 1 # If yes, increases counter
+if (5/2 < L) # Does left endpt miss 5/2?
+tooHigh <- tooHigh + 1 # If yes, increase counter
+}
+tooLow/N
+tooHigh/N
+
+```
+
+It can be seen that as the sample size is increased, we are less likely to miss the true mean.
+
+7. 14 Import the FlightDelays data set (see Case Study in Section 1.1) into R.
+Although the data represent all flights for United Airlines and American Airlines
+in May and June 2009, assume for this exercise that these flights are a sample
+from all flights flown by the two airlines under similar conditions. We will
+compare the lengths of flight delays between the two airlines.
+(a) Create exploratory plots of the lengths of delays for the two airlines.
+(b) Find a 95% t confidence interval for the difference in mean flight delays
+between the two airlines and interpret this interval.
+
+a)
+```{r}
+data <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FlightDelays.csv")
+AALength <- subset(data, select=FlightLength, Carrier == "AA" , drop=T)
+UALength <- subset(data, select=FlightLength, Carrier == "UA" , drop=T)
+summary(AALength)
+summary(UALength)
+hist(AALength, main = "Histogram distribution of the AA flights")
+abline(v=mean(AALength),col="red")
+
+hist(UALength, main = "Histogram distribution of the UA Airline flights")
+abline(v=mean(AALength),col="green")
+
+qqnorm(AALength)
+qqline(AALength)
+
+qqnorm(UALength)
+qqline(UALength)
+```
+
+b)
+
+```{r}
+#Barlett Test
+bartlett.test(list(AALength,UALength))
+#Equal Variance Test
+var.test(AALength,UALength)
+t.test(AALength,UALength, conf.level = .95, var.equal = FALSE)$conf
+```
+We are 95% confident that the true difference in mean flight length of the flights between AA
+and UA is within the interval (2.141152,8.948157)
+
+7. 18
+In the remark on page 181, we stated a result for the confidence interval for
+the difference in means if we knew that the population variances are the same.
+We also cautioned against using this result since, in general, it is difficult to 
+determine whether the population variances are indeed the same. Run a simulation
+to see how well the confidence interval for the difference in means compare
+in the pooled and unpooled variance cases when, in fact, the population variances
+are not the same.
+The R code below will draw random samples of size m and n from N(8, 102)
+and N(3, 152). We will count the number of times the two 95% confidence
+intervals capture the true difference in mean of 5.
+
+(a) Compare the performance of the two versions of the confidence interval for
+the difference in means.
+(b) Repeat the simulation with different sample sizes, for example, m =
+80, n = 40;m = 120, n = 80;m = 80, n = 80. Discuss.
+
+```{r}
+pooled.count <- 0 # set counter to 0
+unpooled.count <- 0 # set counter to 0
+m <- 20 # sample size
+n <- 10 # sample size
+N <- 10000 # number of runs
+for (i in 1:N)
+{
+x <- rnorm(m, 8, 10) # random sample from N(8,10^2)
+y <- rnorm(n, 3, 15) # random sample from N(3,15^2)
+CI.pooled <- t.test(x, y, var.equal = T)$conf # CI, pooled variance
+CI.unpooled <- t.test(x, y)$conf # CI, unpooled variance
+if (CI.pooled[1] <= 5 && 5 <= CI.pooled[2]) # Is 5 in interval?
+pooled.count <- pooled.count + 1 # If yes, increment counter.
+if (CI.unpooled[1] <= 5 && 5 <= CI.unpooled[2])# Is 5 in interval?
+unpooled.count <- unpooled.count + 1 # If yes, increment counter.
+}
+pooled.count/N # Prop. of time 0 in CI.
+unpooled.count/N # Prop. of time 0 in CI.
+```
+
+So they are a little different
+
+b)
+
+```{r}
+pooled.count <- 0 # set counter to 0
+unpooled.count <- 0 # set counter to 0
+m <- 80 # sample size
+n <- 40 # sample size
+N <- 10000 # number of runs
+for (i in 1:N)
+{
+x <- rnorm(m, 8, 10) # random sample from N(8,10^2)
+y <- rnorm(n, 3, 15) # random sample from N(3,15^2)
+CI.pooled <- t.test(x, y, var.equal = T)$conf # CI, pooled variance
+CI.unpooled <- t.test(x, y)$conf # CI, unpooled variance
+if (CI.pooled[1] <= 5 && 5 <= CI.pooled[2]) # Is 5 in interval?
+pooled.count <- pooled.count + 1 # If yes, increment counter.
+if (CI.unpooled[1] <= 5 && 5 <= CI.unpooled[2])# Is 5 in interval?
+unpooled.count <- unpooled.count + 1 # If yes, increment counter.
+}
+pooled.count/N # Prop. of time 0 in CI.
+unpooled.count/N # Prop. of time 0 in CI.
+
+
+
+pooled.count <- 0 # set counter to 0
+unpooled.count <- 0 # set counter to 0
+m <- 120 # sample size
+n <- 80 # sample size
+N <- 10000 # number of runs
+for (i in 1:N)
+{
+x <- rnorm(m, 8, 10) # random sample from N(8,10^2)
+y <- rnorm(n, 3, 15) # random sample from N(3,15^2)
+CI.pooled <- t.test(x, y, var.equal = T)$conf # CI, pooled variance
+CI.unpooled <- t.test(x, y)$conf # CI, unpooled variance
+if (CI.pooled[1] <= 5 && 5 <= CI.pooled[2]) # Is 5 in interval?
+pooled.count <- pooled.count + 1 # If yes, increment counter.
+if (CI.unpooled[1] <= 5 && 5 <= CI.unpooled[2])# Is 5 in interval?
+unpooled.count <- unpooled.count + 1 # If yes, increment counter.
+}
+pooled.count/N # Prop. of time 0 in CI.
+unpooled.count/N # Prop. of time 0 in CI.
+
+
+pooled.count <- 0 # set counter to 0
+unpooled.count <- 0 # set counter to 0
+m <- 80 # sample size
+n <- 80 # sample size
+N <- 10000 # number of runs
+for (i in 1:N)
+{
+x <- rnorm(m, 8, 10) # random sample from N(8,10^2)
+y <- rnorm(n, 3, 15) # random sample from N(3,15^2)
+CI.pooled <- t.test(x, y, var.equal = T)$conf # CI, pooled variance
+CI.unpooled <- t.test(x, y)$conf # CI, unpooled variance
+if (CI.pooled[1] <= 5 && 5 <= CI.pooled[2]) # Is 5 in interval?
+pooled.count <- pooled.count + 1 # If yes, increment counter.
+if (CI.unpooled[1] <= 5 && 5 <= CI.unpooled[2])# Is 5 in interval?
+unpooled.count <- unpooled.count + 1 # If yes, increment counter.
+}
+pooled.count/N # Prop. of time 0 in CI.
+unpooled.count/N # Prop. of time 0 in CI.
+```
+
+So if m and n are close enough we can use the pooled method but if they are no close, we have to use pooled method.

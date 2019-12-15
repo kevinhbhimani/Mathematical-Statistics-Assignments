@@ -1,0 +1,91 @@
+---
+title: "HW 9"
+author: "Kevin H. Bhimani"
+date: "April 25, 2018"
+output: html_document
+---
+
+10. Import the data from data set Bangladesh. In addition to arsenic concentrations for 271 wells, the data set contains cobalt and chlorine concentrations.
+
+(a) Conduct EDA on the chlorine concentrations and describe the salient
+features.
+
+```{r}
+
+Bangladesh <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/Bangladesh.csv",header = TRUE)
+chlorine <- subset(Bangladesh, select = Chlorine, subset =!is.na(Chlorine), drop = T)
+hist(chlorine)
+mean(chlorine)
+var(chlorine)
+```
+(b) Bootstrap the mean.
+
+```{r}
+n <- length(chlorine)
+t <-10^4
+boot.mean <-  numeric(t)
+for(i in 1:10^4){
+x <- sample(chlorine,n,replace=TRUE)
+boot.mean[i] <-mean(x)
+}
+mean(boot.mean)
+var(boot.mean)
+hist(boot.mean)
+```
+
+(c) Find and interpret the 95% bootstrap percentile confidence interval.
+```{r}
+quantile(boot.mean, c(0.025,0.975))
+```
+
+(d) What is the bootstrap estimate of the bias? What fraction of the bootstrap standard error does it represent?
+```{r}
+mean(boot.mean) - mean(chlorine) #bias
+sd(boot.mean) #standard error
+```
+12. The data set FishMercury contains mercury levels (parts per million) for 30 fish caught in lakes in Minnesota.
+(a) Create a histogram or boxplot of the data. What do you observe?
+```{r}
+FishMercury <- read.csv("http://people.kzoo.edu/enordmoe/math365/data/FishMercury.csv",header = TRUE)
+Fish <- subset(FishMercury, select = Mercury , drop=T)
+ca <- seq(0,2,0.25)
+hist(Fish, ca)
+```
+This shows most of the data lies between 0 and 0.25
+
+(b) Bootstrap the mean and record the bootstrap standard error and the 95% bootstrap percentile interval.
+```{r}
+n <- length(Fish)
+B <- 10^4
+fish.boot <- numeric(B)
+for( i in 1:B){
+  x <- sample(Fish,n,replace=TRUE)
+  fish.boot[i] <- mean(x)
+}
+hist(fish.boot)
+mean(fish.boot)
+sd(fish.boot)
+quantile(fish.boot, c(0.025,0.975))
+
+```
+
+(c) Remove the outlier and bootstrap the mean of the remaining data. Record the bootstrap standard error and the 95% bootstrap percentile interval.
+```{r}
+mercury <- FishMercury < max(FishMercury)
+n <- length(Fish)-1
+B <- 10^4
+fish.boot1 <- numeric(B)
+for( i in 1:B){
+  x <- sample(mercury,n,replace=TRUE)
+  fish.boot1[i] <- mean(x)
+}
+hist(fish.boot1)
+mean(fish.boot1)
+sd(fish.boot1)
+quantile(fish.boot1, c(0.025,0.975))
+```
+
+(d) What effect did removing the outlier have on the bootstrap distribution, in particular, the standard error?
+
+There was a big change in distribution. It became skewed towards right instead of left. The mean increased too and the standard deviation decreased.
+
